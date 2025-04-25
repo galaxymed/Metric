@@ -1,12 +1,17 @@
+const fetch = require("node-fetch");
+
 exports.handler = async function () {
-    const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8";
+    const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8"; // Reemplaza con la URL de tu stream
     try {
         const response = await fetch(streamUrl);
         const data = await response.text(); // Procesa y extrae métricas aquí
+
+        // Simula métricas para la demostración
         const metrics = {
             viewers: Math.floor(Math.random() * 100), // Simula visitas por ahora
             timestamp: new Date().toISOString()
         };
+
         return {
             statusCode: 200,
             body: JSON.stringify(metrics)
