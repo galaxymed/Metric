@@ -1,7 +1,7 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function () {
-    const streamUrl = "https://tv.invasivamedia.com/live/.m3u8"; // Reemplaza con la URL correcta
+export async function handler(event, context) {
+    const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8"; // Reemplaza con tu URL
     try {
         const response = await fetch(streamUrl);
         const data = await response.text(); // Procesa y extrae los datos necesarios
@@ -21,4 +21,4 @@ exports.handler = async function () {
             body: JSON.stringify({ error: "Error al obtener el stream", details: error.message })
         };
     }
-};
+}
