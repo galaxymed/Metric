@@ -1,9 +1,9 @@
 {
-  "name": "tu-proyecto",
+  "name": "monitoreo-stream",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "netlify/functions/metrics.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "netlify dev"
   },
   "dependencies": {
     "node-fetch": "^3.3.0"
