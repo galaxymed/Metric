@@ -1,20 +1,19 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function () {
+export async function handler(event, context) {
     const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8"; // Reemplaza con tu URL real
     try {
         const response = await fetch(streamUrl);
-        const data = await response.text(); // Simula o procesa los datos del stream según tus necesidades
+        const data = await response.text(); // Procesa y extrae datos del stream
 
-        // Generar métricas correctamente estructuradas
         const metrics = {
-            viewers: Math.floor(Math.random() * 100), // Número aleatorio de visitas
-            timestamp: new Date().toISOString() // Marca de tiempo
+            viewers: Math.floor(Math.random() * 100), // Ajusta esto si deseas desactivar simulación
+            timestamp: new Date().toISOString()
         };
 
         return {
             statusCode: 200,
-            body: JSON.stringify(metrics) // Asegúrate de enviar solo un objeto JSON válido
+            body: JSON.stringify(metrics)
         };
     } catch (error) {
         return {
@@ -22,4 +21,4 @@ exports.handler = async function () {
             body: JSON.stringify({ error: "Error al obtener el stream", details: error.message })
         };
     }
-};
+}
