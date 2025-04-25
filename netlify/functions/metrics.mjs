@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 export async function handler(event, context) {
-    const streamUrl = "TU_URL_DE_STREAM_M3U8";
+    const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8";
 
     try {
         const response = await fetch(streamUrl);
