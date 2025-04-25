@@ -7,7 +7,7 @@ export async function handler(event, context) {
         const data = await response.text(); // Procesa y extrae datos del stream
 
         const metrics = {
-            viewers: Math.floor(Math.random() * 100), // Ajusta esto si deseas desactivar simulación
+            viewers: 0, // Ajusta esto si deseas desactivar simulación
             timestamp: new Date().toISOString()
         };
 
