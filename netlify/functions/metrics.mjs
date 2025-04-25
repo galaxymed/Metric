@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 export async function handler(event, context) {
-    const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8"; // Reemplaza con tu URL real
+    const streamUrl = "https://mitv.zplay.cl/Invasiva/index.m3u8"; // Reemplaza con tu URL real
     try {
         const response = await fetch(streamUrl);
         const data = await response.text(); // Procesa y extrae datos del stream
