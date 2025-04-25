@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 
 exports.handler = async () => {
-    const streamUrl = "TU_URL_DE_STREAM_M3U8";
+    const streamUrl = "Thttps://tv.invasivamedia.com/hls/live.m3u8";
     try {
         const response = await fetch(streamUrl);
         const data = await response.text(); // Procesa los datos según tus necesidades
