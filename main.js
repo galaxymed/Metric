@@ -1,4 +1,4 @@
-const streamUrl = "TU_URL_STREAM_M3U8";
+const streamUrl = "https://tv.invasivamedia.com/hls/live.m3u8";
 
 async function fetchStreamData() {
     try {
