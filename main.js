@@ -39,7 +39,7 @@ function updateChart(viewCount) {
 
 async function fetchMetrics() {
     try {
-        const response = await fetch("https://tu-sitio.netlify.app/.netlify/functions/metrics");
+        const response = await fetch("https://panel-inv.netlify.app/.netlify/functions/metrics");
         const data = await response.json();
         updateChart(data.viewers); // Usa los datos reales
     } catch (error) {
