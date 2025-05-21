@@ -1,143 +1,118 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
-import type { InternalOptions } from './options.js';
-import type { AnyNode, Document, ParentNode } from 'domhandler';
-import type { BasicAcceptedElems } from './types.js';
+/*
+  Dependencias del módulo
+*/
+const parse = require('./parse'),
+      defaultOptions = require('./options').default,
+      flattenOptions = require('./options').flatten,
+      isHtml = require('./utils').isHtml,
+      _ = {
+        extend: require('lodash/assignIn'),
+        bind: require('lodash/bind'),
+        forEach: require('lodash/forEach'),
+        defaults: require('lodash/defaults')
+      };
 
-import * as Attributes from './api/attributes.js';
-import * as Traversing from './api/traversing.js';
-import * as Manipulation from './api/manipulation.js';
-import * as Css from './api/css.js';
-import * as Forms from './api/forms.js';
-import * as Extract from './api/extract.js';
-
-type MethodsType = typeof Attributes &
-  typeof Traversing &
-  typeof Manipulation &
-  typeof Css &
-  typeof Forms &
-  typeof Extract;
-
-/**
- * The cheerio class is the central class of the library. It wraps a set of
- * elements and provides an API for traversing, modifying, and interacting with
- * the set.
- *
- * Loading a document will return the Cheerio class bound to the root element of
- * the document. The class will be instantiated when querying the document (when
- * calling `$('selector')`).
- *
- * @example This is the HTML markup we will be using in all of the API examples:
- *
- * ```html
- * <ul id="fruits">
- *   <li class="apple">Apple</li>
- *   <li class="orange">Orange</li>
- *   <li class="pear">Pear</li>
- * </ul>
- * ```
+/*
+ * La API
  */
-export abstract class Cheerio<T> implements ArrayLike<T> {
-  length = 0;
-  [index: number]: T;
+const api = [
+  require('./api/attributes'),
+  require('./api/traversing'),
+  require('./api/manipulation'),
+  require('./api/css'),
+  require('./api/forms')
+];
 
-  options: InternalOptions;
-  /**
-   * The root of the document. Can be set by using the `root` argument of the
-   * constructor.
-   *
-   * @private
-   */
-  _root: Cheerio<Document> | null;
+/*
+ * Instancia de cheerio
+ */
+const Cheerio = module.exports = function (selector, context, root, options) {
+  if (!(this instanceof Cheerio)) return new Cheerio(selector, context, root, options);
 
-  /**
-   * Instance of cheerio. Methods are specified in the modules. Usage of this
-   * constructor is not recommended. Please use `$.load` instead.
-   *
-   * @private
-   * @param elements - The new selection.
-   * @param root - Sets the root node.
-   * @param options - Options for the instance.
-   */
-  constructor(
-    elements: ArrayLike<T> | undefined,
-    root: Cheerio<Document> | null,
-    options: InternalOptions,
-  ) {
-    this.options = options;
-    this._root = root;
+  this.options = _.defaults(flattenOptions(options), this.options, defaultOptions);
 
-    if (elements) {
-      for (let idx = 0; idx < elements.length; idx++) {
-        this[idx] = elements[idx];
-      }
-      this.length = elements.length;
-    }
+  if (!selector) return this;
+
+  if (root) {
+    if (typeof root === 'string') root = parse(root, this.options, false);
+    this._root = new Cheerio(root);
   }
 
-  prevObject: Cheerio<any> | undefined;
-  /**
-   * Make a cheerio object.
-   *
-   * @private
-   * @param dom - The contents of the new object.
-   * @param context - The context of the new object.
-   * @returns The new cheerio object.
-   */
-  abstract _make<T>(
-    dom: ArrayLike<T> | T | string,
-    context?: BasicAcceptedElems<AnyNode>,
-  ): Cheerio<T>;
+  if (selector.cheerio) return selector;
+  
+  if (isNode(selector)) selector = [selector];
 
-  /**
-   * Parses some content.
-   *
-   * @private
-   * @param content - Content to parse.
-   * @param options - Options for parsing.
-   * @param isDocument - Allows parser to be switched to fragment mode.
-   * @returns A document containing the `content`.
-   */
-  abstract _parse(
-    content: string | Document | AnyNode | AnyNode[] | Buffer,
-    options: InternalOptions,
-    isDocument: boolean,
-    context: ParentNode | null,
-  ): Document;
+  if (Array.isArray(selector)) {
+    _.forEach(selector, (elem, idx) => {
+      this[idx] = elem;
+    });
+    this.length = selector.length;
+    return this;
+  }
 
-  /**
-   * Render an element or a set of elements.
-   *
-   * @private
-   * @param dom - DOM to render.
-   * @returns The rendered DOM.
-   */
-  abstract _render(dom: AnyNode | ArrayLike<AnyNode>): string;
-}
+  if (typeof selector === 'string' && isHtml(selector)) {
+    return new Cheerio(parse(selector, this.options, false).children);
+  }
 
-export interface Cheerio<T> extends MethodsType, Iterable<T> {
-  cheerio: '[cheerio object]';
+  if (!context) {
+    context = this._root;
+  } else if (typeof context === 'string') {
+    if (isHtml(context)) {
+      context = new Cheerio(parse(context, this.options, false));
+    } else {
+      selector = [context, selector].join(' ');
+      context = this._root;
+    }
+  } else if (!context.cheerio) {
+    context = new Cheerio(context);
+  }
 
-  splice: typeof Array.prototype.splice;
-}
+  if (!context) return this;
 
-/** Set a signature of the object. */
+  return context.find(selector);
+};
+
+/**
+ * Mezclar en `estático`
+ */
+_.extend(Cheerio, require('./static'));
+
+/*
+ * Establecer una firma del objeto
+ */
 Cheerio.prototype.cheerio = '[cheerio object]';
 
 /*
- * Make cheerio an array-like object
+ * Convertir cheerio en un objeto tipo matriz
  */
+Cheerio.prototype.length = 0;
 Cheerio.prototype.splice = Array.prototype.splice;
 
-// Support for (const element of $(...)) iteration:
-Cheerio.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+/*
+ * Hacer un objeto cheerio
+ *
+ * @api privado
+ */
+Cheerio.prototype._make = function (dom, context) {
+  const cheerio = new this.constructor(dom, context, this._root, this.options);
+  cheerio.prevObject = this;
+  return cheerio;
+};
 
-// Plug in the API
-Object.assign(
-  Cheerio.prototype,
-  Attributes,
-  Traversing,
-  Manipulation,
-  Css,
-  Forms,
-  Extract,
-);
+/**
+ * Convierte un objeto cheerio en una matriz
+ */
+Cheerio.prototype.toArray = function () {
+  return this.get();
+};
+
+/**
+ * Conecte la API
+ */
+api.forEach((mod) => {
+  _.extend(Cheerio.prototype, mod);
+});
+
+const isNode = function (obj) {
+  return obj.name || obj.type === 'text' || obj.type === 'comment';
+};
