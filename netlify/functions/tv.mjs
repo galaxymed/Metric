@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
-import cheerio from "cheerio";  // Para analizar HTML
+import cheerio from "./cheerio.js";  // Lo cargas como un archivo normal
+  // Para analizar HTML
 
 export async function handler(event) {
     try {
