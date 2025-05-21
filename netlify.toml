@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/tv/canal.m3u8"
+  to = "/.netlify/functions/tv"
+  status = 200
