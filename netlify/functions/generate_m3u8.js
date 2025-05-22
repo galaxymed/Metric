@@ -1,37 +1,34 @@
-import fs from "fs";
-
 export async function handler(event) {
     try {
         console.log("🚀 Ejecutando generate_m3u8.js...");
 
-        // Obtener el canal solicitado
-        const canal = event.queryStringParameters.canal || "telefuturo"; 
+        // 1️⃣ Obtener el canal solicitado desde la URL
+        const canal = event.queryStringParameters.canal || "telefuturo"; // Canal por defecto
         console.log(`📡 Canal solicitado: ${canal}`);
 
-        // Llamar a la función `/tv` para obtener la URL del canal
+        // 2️⃣ Llamar a `tv.mjs` para obtener la URL del canal
         const tvFunctionUrl = `https://panel-inv.netlify.app/.netlify/functions/tv?canal=${canal}`;
         const respuesta = await fetch(tvFunctionUrl);
         const datosJson = await respuesta.json();
 
-        console.log("📄 JSON recibido:", datosJson);
+        console.log("📄 JSON recibido:", JSON.stringify(datosJson, null, 2));
 
-        // Extraer la URL del streaming
-        let streamingUrl = datosJson.url;
-        if (!streamingUrl) {
+        // 3️⃣ Extraer solo la URL sin JSON adicional
+        let streamingUrl = datosJson.url; 
+
+        if (!streamingUrl || typeof streamingUrl !== "string") {
             console.error("❌ No se encontró una URL válida.");
-            return { statusCode: 500, body: "Error al obtener la URL del canal." };
+            return {
+                statusCode: 500,
+                headers: { "Content-Type": "application/x-mpegURL" },
+                body: "#EXTM3U\n#ERROR No se encontró una URL válida."
+            };
         }
 
-        console.log("✅ URL extraída:", streamingUrl);
+        console.log("✅ URL limpia extraída:", streamingUrl);
 
-        // Crear contenido M3U8
+        // 4️⃣ Crear el archivo M3U8 correctamente formateado
         const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
-
-        // Guardar el archivo estático
-        const filePath = `/tv/${canal}.m3u8`;
-        fs.writeFileSync(filePath, m3u8Contenido);
-
-        console.log(`✅ Archivo M3U8 guardado en: ${filePath}`);
 
         return {
             statusCode: 200,
@@ -39,7 +36,11 @@ export async function handler(event) {
             body: m3u8Contenido
         };
     } catch (error) {
-        console.error("❌ Error interno:", error);
-        return { statusCode: 500, body: "Error interno del servidor." };
+        console.error("❌ Error al generar el archivo m3u8:", error);
+        return {
+            statusCode: 500,
+            headers: { "Content-Type": "application/x-mpegURL" },
+            body: "#EXTM3U\n#ERROR Error interno del servidor."
+        };
     }
 }
