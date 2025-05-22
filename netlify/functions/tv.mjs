@@ -1,23 +1,19 @@
 import fetch from "node-fetch";
-import extractStreamUrl from "./cheerio.js";  // Importación corregida
+import extractStreamUrl from "./cheerio.js";
 
 export async function handler(event) {
     try {
-        // Página que contiene la transmisión
-        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo";
+        const urlFuente = "https://tu-pagina.com/reproductor"; // Página donde está el reproductor
         
-        // Obtener el HTML de la página
         const response = await fetch(urlFuente);
         const html = await response.text();
 
-        // Usar la función de `cheerio.js` para extraer la URL del stream
-        const streamingUrl = extractStreamUrl(html);
+        const streamingUrl = extractStreamUrl(html, "720p"); // Puedes cambiar la calidad: "1080p", "320p"
 
-        // Validar si se obtuvo la URL
         if (!streamingUrl) {
-            return { 
-                statusCode: 500, 
-                body: JSON.stringify({ error: "No se encontró la URL del stream." }) 
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "No se encontró la URL m3u8 en el reproductor." })
             };
         }
 
@@ -27,9 +23,9 @@ export async function handler(event) {
             body: JSON.stringify({ url: streamingUrl }),
         };
     } catch (error) {
-        return { 
-            statusCode: 500, 
-            body: JSON.stringify({ error: "Error interno del servidor." }) 
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Error interno del servidor." })
         };
     }
 }
