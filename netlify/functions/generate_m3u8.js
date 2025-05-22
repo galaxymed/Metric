@@ -1,38 +1,39 @@
 async function generarM3u8() {
   try {
-    // 1. Leer el archivo JSON (ejemplo con fetch)
-    const respuesta = await fetch('https://panel-inv.netlify.app/.netlify/functions/tv'); // Reemplaza con la ruta de tu archivo JSON
+    // 1. Obtener el JSON directamente desde la función `/tv`
+    const respuesta = await fetch('https://panel-inv.netlify.app/.netlify/functions/tv');
     if (!respuesta.ok) {
-      throw new Error(`Error al obtener el archivo JSON: ${respuesta.status}`);
+      throw new Error(`Error al obtener el JSON: ${respuesta.status}`);
     }
     const datosJson = await respuesta.json();
 
-    // 2. Analizar la respuesta JSON (ya está analizada por fetch.json())
+    console.log("📄 JSON recibido:", datosJson);
 
-    // 3. Crear la lista m3u8
-    let m3u8Contenido = `#EXTM3U\n`; // Encabezado de m3u8
-    datosJson.forEach(item => {
-      m3u8Contenido += `#EXTINF:-1,${item.nombre}\n`; // Información del segmento
-      m3u8Contenido += item.url + '\n'; // URL del segmento
-    });
+    // 2. Verificar que el JSON contiene la propiedad "url"
+    if (!datosJson.url) {
+      throw new Error("❌ No se encontró la propiedad 'url' en el JSON.");
+    }
 
-    // 4. Escribir el archivo m3u8 (ejemplo para descargar el archivo)
-    const blob = new Blob([m3u8Contenido], { type: 'application/x-mpegURL' }); // Tipo MIME
+    // 3. Generar contenido M3U8 con la URL obtenida
+    const m3u8Contenido = `#EXTM3U\n${datosJson.url}`;
+
+    // 4. Descargar el archivo M3U8
+    const blob = new Blob([m3u8Contenido], { type: 'application/x-mpegURL' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'lista.m3u8'; // Nombre del archivo
+    a.download = 'lista.m3u8';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    console.log("Archivo m3u8 generado correctamente.");
+    console.log("✅ Archivo m3u8 generado correctamente.");
 
   } catch (error) {
-    console.error("Error al generar el archivo m3u8:", error);
+    console.error("❌ Error al generar el archivo m3u8:", error);
   }
 }
 
-// Llama a la función
+// Ejecutar la función al cargar la página
 generarM3u8();
