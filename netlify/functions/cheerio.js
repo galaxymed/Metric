@@ -1,17 +1,37 @@
-export default function extractStreamUrl(html) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
+import fetch from "node-fetch";
+import extractStreamUrl from "./cheerio.js";
 
-    // Buscar todas las etiquetas <source> con tipo "application/x-mpegURL"
-    const sources = doc.querySelectorAll('source[type="application/x-mpegURL"]');
-    
-    console.log("Fuentes encontradas:", sources.length);  // 🚀 Ver cuántas etiquetas <source> hay
+export async function handler(event) {
+    try {
+        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo"; // Página donde está el reproductor
+        
+        console.log("🌐 Accediendo a:", urlFuente);
+        const response = await fetch(urlFuente);
+        const html = await response.text();
 
-    // Mostrar todas las URLs encontradas
-    sources.forEach(source => {
-        console.log("URL detectada:", source.getAttribute("src"));
-    });
+        console.log("📄 HTML obtenido:", html.substring(0, 500)); // 🚀 Imprimir primeros 500 caracteres
 
-    // Retornar la primera URL disponible
-    return sources.length > 0 ? sources[0].getAttribute("src") : "";
+        const streamingUrl = extractStreamUrl(html);
+
+        console.log("🎯 URL final extraída:", streamingUrl); // 🚀 Ver la URL antes de devolverla
+
+        if (!streamingUrl) {
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "No se encontró la URL m3u8 en el reproductor." })
+            };
+        }
+
+        return {
+            statusCode: 200,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: streamingUrl }),
+        };
+    } catch (error) {
+        console.error("❌ Error interno:", error); // 🚀 Registrar cualquier error en consola
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Error interno del servidor." })
+        };
+    }
 }
