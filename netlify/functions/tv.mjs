@@ -3,7 +3,7 @@ import extractStreamUrl from "./cheerio.js";
 
 export async function handler(event) {
     try {
-        const urlFuente = "https://tu-pagina.com/reproductor"; // Página donde está el reproductor
+        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo"; // Página donde está el reproductor
         
         const response = await fetch(urlFuente);
         const html = await response.text();
