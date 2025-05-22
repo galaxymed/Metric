@@ -8,6 +8,7 @@ export async function handler(event) {
         const html = await response.text();
 
         const streamingUrl = extractStreamUrl(html);
+        const safeUrl = encodeURI(streamingUrl);
 
 
         console.log("🎯 URL final extraída:", streamingUrl);
