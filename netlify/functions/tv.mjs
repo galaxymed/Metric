@@ -3,7 +3,7 @@ import extractStreamUrl from "/cheerio.js";
 
 export async function handler(event) {
     try {
-        const urlFuente = "https://tv.invasivamedia.com"; // Página donde está el reproductor
+        const urlFuente = "https://tv.invasivamedia.com/hls/live.m3u8"; // Página donde está el reproductor
         
         const response = await fetch(urlFuente);
         const html = await response.text();
