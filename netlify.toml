@@ -2,6 +2,8 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/tv/canal.m3u8"
-  to = "/.netlify/functions/tv"
+  from = "/tv/:canal.m3u8"
+  to = "/.netlify/functions/generate_m3u8?canal=:canal"
   status = 200
+  force = true
+
