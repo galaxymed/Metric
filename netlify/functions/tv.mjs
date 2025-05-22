@@ -16,7 +16,7 @@ export async function handler(event) {
         if (!streamingUrl) {
             return {
                 statusCode: 500,
-                headers: { "Content-Type": "application/vnd.apple.mpegurl" },
+                headers: { "Content-Type": "application/x-mpegURL" },
                 body: "#EXTM3U\n#ERROR No se encontró la URL m3u8 en el reproductor."
             };
         }
