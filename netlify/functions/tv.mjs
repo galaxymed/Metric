@@ -17,4 +17,8 @@ export async function handler(event) {
             body: JSON.stringify({ error: "Error al obtener HTML." })
         };
     }
+
+    const streamingUrl = extractStreamUrl(html);
+console.log("URL final extraída:", streamingUrl);
+
 }
