@@ -21,10 +21,11 @@ export async function handler(event) {
         }
 
         return {
-           statusCode: 200,
-           headers: { "Content-Type": "application/vnd.apple.mpegurl" },
-           body: `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=3000000\n${streamingUrl}
-        };
+    statusCode: 200,
+    headers: { "Content-Type": "application/vnd.apple.mpegurl" },
+    body: `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=3000000\n${streamingUrl}`
+};
+
 
     } catch (error) {
         console.error("❌ Error interno:", error);
