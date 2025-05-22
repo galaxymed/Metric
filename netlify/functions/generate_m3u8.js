@@ -28,7 +28,7 @@ export async function handler(event) {
         console.log("✅ URL limpia extraída:", streamingUrl);
 
         // 4️⃣ Crear el archivo M3U8 correctamente formateado
-        const m3u8Contenido = `#EXTM3U\n#EXT-X-VERSION:3\n${streamingUrl}`;
+        const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
 
         return {
             statusCode: 200,
