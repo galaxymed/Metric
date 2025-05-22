@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import extractStreamUrl from "/cheerio.js";
+import extractStreamUrl from "./cheerio.js";  // ✅ Ahora busca dentro de la misma carpeta
 
 export async function handler(event) {
     try {
