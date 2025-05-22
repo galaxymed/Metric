@@ -1,9 +1,9 @@
 import fetch from "node-fetch";
-import extractStreamUrl from ".https://cdnjs.cloudflare.com/ajax/libs/cheerio/1.0.0-rc.2/lib/cheerio.js";
+import extractStreamUrl from "https://cdnjs.cloudflare.com/ajax/libs/cheerio/1.0.0-rc.2/lib/cheerio.js";
 
 export async function handler(event) {
     try {
-        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo"; // Página donde está el reproductor
+        const urlFuente = "https://tv.invasivamedia.com"; // Página donde está el reproductor
         
         const response = await fetch(urlFuente);
         const html = await response.text();
