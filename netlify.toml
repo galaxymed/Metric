@@ -3,25 +3,25 @@
 
 [[redirects]]
   from = "/tv/telefuturo.m3u8"
-  to = "/.netlify/functions/generate_m3u8?canal=telefuturo"
+  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=telefuturo"
   status = 200
   force = true
 
 [[redirects]]
   from = "/tv/genpy.m3u8"
-  to = "/.netlify/functions/generate_m3u8?canal=genpy"
+  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=genpy"
   status = 200
   force = true
 
 [[redirects]]
   from = "/tv/poputv.m3u8"
-  to = "/.netlify/functions/generate_m3u8?canal=poputv"
+  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=poputv"
   status = 200
   force = true
 
 [[redirects]]
   from = "/tv/latele.m3u8"
-  to = "/.netlify/functions/generate_m3u8?canal=latele"
+  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=latele"
   status = 200
   force = true
 
