@@ -3,7 +3,7 @@ import fs from "fs";
 
 export async function handler(event) {
     try {
-        const tvFunctionUrl = "https://miweb.netlify.app/.netlify/functions/tv";
+        const tvFunctionUrl = "https://panel-inv.netlify.app/.netlify/functions/tv";
         const response = await fetch(tvFunctionUrl);
         const json = await response.json();
 
