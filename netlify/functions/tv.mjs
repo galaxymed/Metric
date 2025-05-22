@@ -23,7 +23,7 @@ export async function handler(event) {
 
         return {
             statusCode: 200,
-            headers: { "Content-Type": "application/vnd.apple.mpegurl" },
+            headers: { "Content-Type": "application/x-mpegURL" },
             body: `#EXTM3U\n#EXT-X-VERSION:3\n${streamingUrl}`
         };
     } catch (error) {
