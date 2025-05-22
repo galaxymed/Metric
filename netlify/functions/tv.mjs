@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import extractStreamUrl from "https://cdnjs.cloudflare.com/ajax/libs/cheerio/1.0.0-rc.2/lib/cheerio.js";
+import extractStreamUrl from "/cheerio.js";
 
 export async function handler(event) {
     try {
