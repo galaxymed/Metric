@@ -4,7 +4,7 @@ import extractStreamUrl from "./cheerio.js";  // Importación corregida
 export async function handler(event) {
     try {
         // Página que contiene la transmisión
-        const urlFuente = "https://ejemplo.com/transmision";
+        const urlFuente = "https://www.telefuturo.com.py/envivo";
         
         // Obtener el HTML de la página
         const response = await fetch(urlFuente);
