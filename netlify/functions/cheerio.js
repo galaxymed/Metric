@@ -1,14 +1,16 @@
 export default function extractStreamUrl(html) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
+    console.log("📄 HTML recibido (primeros 500 caracteres):", html.substring(0, 500));
 
-    const sources = doc.querySelectorAll('source[type="application/x-mpegURL"]');
+    // Usamos una expresión regular para buscar la URL dentro de <source>
+    const regex = /<source[^>]+src="([^"]+\.m3u8[^"]*)"/g;
+    const matches = [...html.matchAll(regex)]; // Obtener todas las coincidencias
 
-    console.log("🔎 Fuentes encontradas:", sources.length);
+    console.log("🔎 Fuentes encontradas:", matches.length);
 
-    sources.forEach(source => {
-        console.log("🔗 URL detectada:", source.getAttribute("src"));
-    });
+    if (matches.length > 0) {
+        console.log("🔗 URL detectada:", matches[0][1]);
+        return matches[0][1]; // Retorna la primera URL encontrada
+    }
 
-    return sources.length > 0 ? sources[0].getAttribute("src") : "";
+    return ""; // Si no hay coincidencias, devuelve vacío
 }
