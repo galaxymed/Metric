@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import fs from "fs"; // Importar sistema de archivos para guardar el M3U8
 import extractStreamUrl from "./cheerio.js";
 
 export async function handler(event) {
@@ -19,10 +20,14 @@ export async function handler(event) {
             };
         }
 
+        // **📁 Guardar el M3U8 en el servidor**
+        const m3u8Content = `#EXTM3U\n${streamingUrl}`;
+        fs.writeFileSync("/tmp/stream.m3u8", m3u8Content); // Guardar en carpeta temporal
+
         return {
             statusCode: 200,
             headers: { "Content-Type": "application/x-mpegURL" },
-            body: `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=3000000\n${streamingUrl}`
+            body: m3u8Content
         };
     } catch (error) {
         console.error("❌ Error interno:", error);
