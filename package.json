@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "node-fetch": "^3.2.0",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
     "fetch-blob": "^3.2.0",
     "formdata-polyfill": "^4.0.0"
   },
