@@ -11,3 +11,9 @@
     "start": "node index.js"
   }
 }
+{
+  "dependencies": {
+    "fetch-blob": "^3.2.0",
+    "formdata-polyfill": "^4.0.0"
+  }
+}
