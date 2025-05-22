@@ -2,19 +2,22 @@ export async function handler(event) {
     try {
         console.log("🚀 Ejecutando generate_m3u8.js...");
 
-        // 1. Obtener la respuesta cruda desde `/tv`
-        const tvFunctionUrl = "https://panel-inv.netlify.app/.netlify/functions/tv";
+        // 1️⃣ Obtener el canal solicitado desde la URL
+        const canal = event.queryStringParameters.canal || "telefuturo"; // Canal por defecto
+        console.log(`📡 Canal solicitado: ${canal}`);
+
+        // 2️⃣ Llamar a `tv.mjs` para obtener la URL del canal
+        const tvFunctionUrl = `https://panel-inv.netlify.app/.netlify/functions/tv?canal=${canal}`;
         const respuesta = await fetch(tvFunctionUrl);
-        const datosTexto = await respuesta.text(); // Obtener el texto bruto en lugar de JSON
+        const datosJson = await respuesta.json();
 
-        console.log("📄 Respuesta recibida:", datosTexto);
+        console.log("📄 JSON recibido:", JSON.stringify(datosJson, null, 2));
 
-        // 2. Extraer SOLO la URL usando una expresión regular
-        const regex = /https?:\/\/[^\s"]+/g; // Capturar la URL dentro del texto
-        const match = datosTexto.match(regex);
+        // 3️⃣ Extraer solo la URL sin JSON adicional
+        let streamingUrl = datosJson.url; 
 
-        if (!match || match.length === 0) {
-            console.error("❌ No se encontró una URL válida en la respuesta.");
+        if (!streamingUrl || typeof streamingUrl !== "string") {
+            console.error("❌ No se encontró una URL válida.");
             return {
                 statusCode: 500,
                 headers: { "Content-Type": "application/x-mpegURL" },
@@ -22,10 +25,9 @@ export async function handler(event) {
             };
         }
 
-        const streamingUrl = match[0]; // Tomar la primera URL encontrada
-        console.log("✅ URL extraída correctamente:", streamingUrl);
+        console.log("✅ URL limpia extraída:", streamingUrl);
 
-        // 3. Generar el archivo M3U8 sin datos JSON extra
+        // 4️⃣ Crear el archivo M3U8 correctamente formateado
         const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
 
         return {
