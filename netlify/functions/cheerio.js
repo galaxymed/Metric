@@ -1,16 +1,3 @@
-/*
-  Dependencias del módulo
-*/
-const parse = require('./parse'),
-      defaultOptions = require('./options').default,
-      flattenOptions = require('./options').flatten,
-      isHtml = require('./utils').isHtml,
-      _ = {
-        extend: require('lodash/assignIn'),
-        bind: require('lodash/bind'),
-        forEach: require('lodash/forEach'),
-        defaults: require('lodash/defaults')
-      };
 
 /*
  * La API
