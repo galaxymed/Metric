@@ -2,16 +2,19 @@ export async function handler(event) {
     try {
         console.log("🚀 Ejecutando generate_m3u8.js...");
 
-        // 1. Obtener el JSON desde la función `/tv`
+        // 1. Obtener la respuesta cruda desde `/tv`
         const tvFunctionUrl = "https://panel-inv.netlify.app/.netlify/functions/tv";
         const respuesta = await fetch(tvFunctionUrl);
-        const datosJson = await respuesta.json();
+        const datosTexto = await respuesta.text(); // Obtener el texto bruto en lugar de JSON
 
-        console.log("📄 JSON recibido:", datosJson);
+        console.log("📄 Respuesta recibida:", datosTexto);
 
-        // 2. Verificar que "url" está presente y es un string válido
-        if (!datosJson || !datosJson.url || typeof datosJson.url !== "string") {
-            console.error("❌ No se encontró una URL válida en el JSON.");
+        // 2. Extraer SOLO la URL usando una expresión regular
+        const regex = /https?:\/\/[^\s"]+/g; // Capturar la URL dentro del texto
+        const match = datosTexto.match(regex);
+
+        if (!match || match.length === 0) {
+            console.error("❌ No se encontró una URL válida en la respuesta.");
             return {
                 statusCode: 500,
                 headers: { "Content-Type": "application/x-mpegURL" },
@@ -19,12 +22,10 @@ export async function handler(event) {
             };
         }
 
-        // 3. Extraer solo la URL eliminando cualquier formato JSON adicional
-        const streamingUrl = datosJson.url.trim();  // Solo la URL, sin { } ni "url:"
+        const streamingUrl = match[0]; // Tomar la primera URL encontrada
+        console.log("✅ URL extraída correctamente:", streamingUrl);
 
-        console.log("✅ URL limpia extraída:", streamingUrl);
-
-        // 4. Construir correctamente el archivo M3U8 con solo la URL
+        // 3. Generar el archivo M3U8 sin datos JSON extra
         const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
 
         return {
