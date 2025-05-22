@@ -9,8 +9,8 @@ export async function handler(event) {
 
         console.log("📄 JSON recibido:", datosJson);
 
-        // 2. Extraer y limpiar la URL eliminando estructura JSON no deseada
-        if (!datosJson || !datosJson.url) {
+        // 2. Verificar que "url" está presente y es un string válido
+        if (!datosJson || !datosJson.url || typeof datosJson.url !== "string") {
             console.error("❌ No se encontró una URL válida en el JSON.");
             return {
                 statusCode: 500,
@@ -19,12 +19,12 @@ export async function handler(event) {
             };
         }
 
-        // **Decodificar la URL correctamente**
-        let streamingUrl = decodeURIComponent(datosJson.url.trim()); // Decodificar caracteres especiales
+        // 3. Extraer solo la URL eliminando cualquier formato JSON adicional
+        const streamingUrl = datosJson.url.trim();  // Solo la URL, sin { } ni "url:"
 
-        console.log("✅ URL final extraída:", streamingUrl);
+        console.log("✅ URL limpia extraída:", streamingUrl);
 
-        // 4. Crear la lista M3U8 correctamente formateada
+        // 4. Construir correctamente el archivo M3U8 con solo la URL
         const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
 
         return {
