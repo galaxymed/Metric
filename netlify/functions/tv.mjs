@@ -3,13 +3,13 @@ import extractStreamUrl from "./cheerio.js";
 
 export async function handler(event) {
     try {
-        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo"; // Página del reproductor
-        
+        const urlFuente = "https://www.desdepylabs.com/external/tvaccionmov/telefuturo"; 
+
         console.log("🌐 Accediendo a:", urlFuente);
         const response = await fetch(urlFuente);
         const html = await response.text();
 
-        console.log("📄 HTML obtenido (primeros 500 caracteres):", html.substring(0, 500));
+        console.log("📄 HTML obtenido:", html.substring(0, 500));
 
         const streamingUrl = extractStreamUrl(html);
 
