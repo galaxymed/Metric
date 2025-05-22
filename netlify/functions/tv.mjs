@@ -28,4 +28,6 @@ export async function handler(event) {
             body: JSON.stringify({ error: "Error interno del servidor." })
         };
     }
+
+    console.log(html);
 }
