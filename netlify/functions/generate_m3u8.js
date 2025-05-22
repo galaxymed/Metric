@@ -9,21 +9,22 @@ export async function handler(event) {
 
         console.log("📄 JSON recibido:", datosJson);
 
-        // 2. Extraer solo la URL sin caracteres adicionales
-        const streamingUrl = datosJson.url; // Tomar solo el valor de "url"
-
-        if (!streamingUrl) {
+        // 2. Verificar que la respuesta contiene una URL válida
+        if (!datosJson || !datosJson.url || typeof datosJson.url !== "string") {
+            console.error("❌ JSON recibido no tiene la propiedad 'url' correctamente.");
             return {
                 statusCode: 500,
                 headers: { "Content-Type": "application/x-mpegURL" },
-                body: "#EXTM3U\n#ERROR No se encontró la URL m3u8."
+                body: "#EXTM3U\n#ERROR No se encontró una URL válida."
             };
         }
 
-        // 3. Crear la lista M3U8 correctamente formateada
-        const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
+        // 3. Limpiar la URL eliminando caracteres no deseados
+        const streamingUrl = datosJson.url.trim(); // Eliminar espacios en blanco
+        console.log("✅ URL extraída y limpia:", streamingUrl);
 
-        console.log("✅ M3U8 generado correctamente.");
+        // 4. Crear la lista M3U8 correctamente formateada
+        const m3u8Contenido = `#EXTM3U\n${streamingUrl}`;
 
         return {
             statusCode: 200,
