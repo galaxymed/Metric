@@ -24,7 +24,7 @@ export async function handler(event) {
         return {
             statusCode: 200,
             headers: { "Content-Type": "application/vnd.apple.mpegurl" },
-            body: `#EXTM3U\n${streamingUrl}`
+            body: `#EXTM3U\n#EXT-X-VERSION:3\n${streamingUrl}`
         };
     } catch (error) {
         console.error("❌ Error interno:", error);
