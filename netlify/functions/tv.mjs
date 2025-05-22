@@ -8,6 +8,8 @@ export async function handler(event) {
         const html = await response.text();
 
         const streamingUrl = extractStreamUrl(html);
+        const safeUrl = encodeURI(streamingUrl);
+
 
         console.log("🎯 URL final extraída:", streamingUrl);
 
@@ -20,10 +22,11 @@ export async function handler(event) {
         }
 
         return {
-            statusCode: 200,
-            headers: { "Content-Type": "application/vnd.apple.mpegurl" },
-            body: `#EXTM3U\n${streamingUrl}`
+           statusCode: 200,
+           headers: { "Content-Type": "application/vnd.apple.mpegurl" },
+           body: `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=3000000\n${streamingUrl}
         };
+
     } catch (error) {
         console.error("❌ Error interno:", error);
         return {
