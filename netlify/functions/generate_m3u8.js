@@ -31,10 +31,15 @@ export async function handler(event) {
         const m3u8Contenido = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:1\n#EXT-X-STREAM-INF:BANDWIDTH=3000000\n${streamingUrl}`;
 
         return {
-            statusCode: 200,
-            headers: { "Content-Type": "application/x-mpegURL" },
-            body: m3u8Contenido
-        };
+    statusCode: 200,
+    headers: {
+        "Content-Type": "application/x-mpegURL",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=86400"
+    },
+    body: m3u8Contenido
+};
+
     } catch (error) {
         console.error("❌ Error al generar el archivo m3u8:", error);
         return {
