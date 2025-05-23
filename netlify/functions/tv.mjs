@@ -13,7 +13,7 @@ export async function handler(event) {
         const canalesDisponibles = {
             "telefuturo": "https://www.desdepylabs.com/external/tvaccionmov/telefuturo",
             "gentvpy": "https://www.desdepylabs.com/external/tvaccionmov/gentv",
-            "poputv": "https://www.desdepylabs.com/external/tvaccionmov/universotv",
+            "npy": "https://www.desdepylabs.com/external/tvaccionmov/npy",
             "latele": "https://www.desdepylabs.com/external/tvaccionmov/latele",
         };
 
