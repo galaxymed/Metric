@@ -1,9 +1,10 @@
 [[headers]]
   for = "/tv/*.m3u8"
   [headers.values]
-    Access-Control-Allow-Origin = "*"
     Content-Type = "application/x-mpegURL"
+    Access-Control-Allow-Origin = "*"
     Cache-Control = "max-age=86400"
+
 
 [build]
   functions = "netlify/functions"
@@ -16,7 +17,7 @@
 
 [[redirects]]
   from = "/tv/genpy.m3u8"
-  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=genpy"
+  to = "https://panel-inv.netlify.app/.netlify/functions/generate_m3u8?canal=gentvpy"
   status = 200
   force = true
 
